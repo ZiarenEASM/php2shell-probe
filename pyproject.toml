@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "php2shell-probe"
+version = "0.1.0"
+description = "Standalone detection probe for PHP2Shell (CVE-2026-109618 / CVE-2026-109619)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "Ander Carrera" }]
+keywords = ["security", "vulnerability-scanner", "php", "cve", "php2shell"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Information Technology",
+  "Programming Language :: Python :: 3",
+  "Topic :: Security",
+]
+
+[project.urls]
+Homepage = "https://github.com/ZiarenEASM/php2shell-probe"
+Issues = "https://github.com/ZiarenEASM/php2shell-probe/issues"
+
+[project.scripts]
+php2shell-probe = "php2shell_probe.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[tool.setuptools.packages.find]
+include = ["php2shell_probe*"]
+
+[tool.setuptools.package-data]
+php2shell_probe = ["py.typed", "templates/*.yaml"]

@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - run: pytest -q
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install build
+      - run: python -m build --wheel
+      # Guards the exact packaging bug caught in review: the vendored Nuclei
+      # template must actually ship inside the built wheel, not just work
+      # under an editable/source-tree install.
+      - run: |
+          python - <<'PY'
+          import glob
+          import zipfile
+
+          wheel = glob.glob("dist/*.whl")[0]
+          with zipfile.ZipFile(wheel) as zf:
+              names = zf.namelist()
+          template = "php2shell_probe/templates/CVE-2026-109618.yaml"
+          assert template in names, f"{template} missing from {wheel}: {names}"
+          print(f"OK: {template} present in {wheel}")
+          PY
+      - run: pip install dist/*.whl
+      - run: php2shell-probe --version
