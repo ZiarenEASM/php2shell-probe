@@ -7,8 +7,9 @@ malformed-response parsing issue).
 
 ## Reporting
 
-Please report security issues in this project **privately** to `ander.carrera@ziaren.com` rather
-than opening a public issue. Include:
+Please report security issues in this project **privately** using GitHub's
+[private vulnerability reporting](https://github.com/ZiarenEASM/php2shell-probe/security/advisories/new)
+(Security tab → "Report a vulnerability") rather than opening a public issue. Include:
 - Affected version/commit.
 - Steps to reproduce.
 - Impact as you see it.
